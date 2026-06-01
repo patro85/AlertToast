@@ -138,52 +138,63 @@ public struct AlertToast: View{
                    subTitleColor: Color? = nil,
                    titleFont: Font? = nil,
                    subTitleFont: Font? = nil,
-                   activityIndicatorColor: Color? = nil)
-        
+                   activityIndicatorColor: Color? = nil,
+                   useGlassEffect: Bool? = nil)
+
         ///Get background color
         var backgroundColor: Color? {
             switch self{
-            case .style(backgroundColor: let color, _, _, _, _, _):
+            case .style(backgroundColor: let color, _, _, _, _, _, _):
                 return color
             }
         }
-        
+
         /// Get title color
         var titleColor: Color? {
             switch self{
-            case .style(_,let color, _,_,_,_):
+            case .style(_,let color, _,_,_,_,_):
                 return color
             }
         }
-        
+
         /// Get subTitle color
         var subtitleColor: Color? {
             switch self{
-            case .style(_,_, let color, _,_,_):
+            case .style(_,_, let color, _,_,_,_):
                 return color
             }
         }
-        
+
         /// Get title font
         var titleFont: Font? {
             switch self {
-            case .style(_, _, _, titleFont: let font, _,_):
+            case .style(_, _, _, titleFont: let font, _,_,_):
                 return font
             }
         }
-        
+
         /// Get subTitle font
         var subTitleFont: Font? {
             switch self {
-            case .style(_, _, _, _, subTitleFont: let font,_):
+            case .style(_, _, _, _, subTitleFont: let font,_,_):
                 return font
             }
         }
 
         var activityIndicatorColor: Color? {
             switch self {
-            case .style(_, _, _, _, _, let color):
+            case .style(_, _, _, _, _, let color, _):
                 return color
+            }
+        }
+
+        /// Whether to use the Liquid Glass background on iOS/macOS 26+.
+        /// `nil` (the default) means glass is used when available; set `false`
+        /// to always keep the classic solid-color / blur background.
+        var useGlassEffect: Bool? {
+            switch self {
+            case .style(_, _, _, _, _, _, let useGlassEffect):
+                return useGlassEffect
             }
         }
     }
@@ -274,7 +285,7 @@ public struct AlertToast: View{
             .textColor(style?.titleColor ?? nil)
             .padding()
             .frame(maxWidth: 400, alignment: .leading)
-            .alertBackground(style?.backgroundColor ?? nil)
+            .alertBackground(style?.backgroundColor ?? nil, useGlassEffect: style?.useGlassEffect ?? true)
             .cornerRadius(10)
             .padding([.horizontal, .bottom])
         }
@@ -330,7 +341,7 @@ public struct AlertToast: View{
             .padding(.horizontal, 24)
             .padding(.vertical, 8)
             .frame(minHeight: 50)
-            .alertBackground(style?.backgroundColor ?? nil)
+            .alertBackground(style?.backgroundColor ?? nil, useGlassEffect: style?.useGlassEffect ?? true)
             .clipShape(Capsule())
             .overlay(Capsule().stroke(Color.gray.opacity(0.2), lineWidth: 1))
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 6)
@@ -396,7 +407,7 @@ public struct AlertToast: View{
         }
         .padding()
         .withFrame(type != .regular && type != .loading)
-        .alertBackground(style?.backgroundColor ?? nil)
+        .alertBackground(style?.backgroundColor ?? nil, useGlassEffect: style?.useGlassEffect ?? true)
         .cornerRadius(10)
     }
     
@@ -637,12 +648,13 @@ fileprivate struct WithFrameModifier: ViewModifier{
 ///Fileprivate View Modifier to change the alert background
 @available(iOS 14, macOS 11, *)
 fileprivate struct BackgroundModifier: ViewModifier{
-    
+
     var color: Color?
-    
+    var useGlassEffect: Bool = true
+
     @ViewBuilder
     func body(content: Content) -> some View {
-        if #available(iOS 26, macOS 26, *) {
+        if #available(iOS 26, macOS 26, *), useGlassEffect {
             if let color = color {
                 content
                     .background(color)
@@ -744,8 +756,8 @@ public extension View{
     /// Choose the alert background
     /// - Parameter color: Some Color, if `nil` return `VisualEffectBlur`
     /// - Returns: some View
-    fileprivate func alertBackground(_ color: Color? = nil) -> some View{
-        modifier(BackgroundModifier(color: color))
+    fileprivate func alertBackground(_ color: Color? = nil, useGlassEffect: Bool = true) -> some View{
+        modifier(BackgroundModifier(color: color, useGlassEffect: useGlassEffect))
     }
     
     /// Choose the alert background
