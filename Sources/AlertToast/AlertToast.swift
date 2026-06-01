@@ -266,6 +266,8 @@ public struct AlertToast: View{
                 if let subTitle = subTitle {
                     Text(LocalizedStringKey(subTitle))
                         .font(style?.subTitleFont ?? Font.subheadline)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .multilineTextAlignment(.leading)
@@ -319,6 +321,8 @@ public struct AlertToast: View{
                                 .opacity(0.7)
                                 .multilineTextAlignment(.center)
                                 .textColor(style?.subtitleColor ?? nil)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
@@ -385,6 +389,8 @@ public struct AlertToast: View{
                         .opacity(0.7)
                         .multilineTextAlignment(.center)
                         .textColor(style?.subtitleColor ?? nil)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
         }
