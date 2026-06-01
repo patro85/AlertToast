@@ -642,12 +642,23 @@ fileprivate struct BackgroundModifier: ViewModifier{
     
     @ViewBuilder
     func body(content: Content) -> some View {
-        if let color = color {
-            content
-                .background(color)
-        }else{
-            content
-                .background(BlurView())
+        if #available(iOS 26, macOS 26, *) {
+            if let color = color {
+                content
+                    .background(color)
+                    .glassEffect(in: .rect(cornerRadius: 16))
+            } else {
+                content
+                    .glassEffect(in: .rect(cornerRadius: 16))
+            }
+        } else {
+            if let color = color {
+                content
+                    .background(color)
+            } else {
+                content
+                    .background(BlurView())
+            }
         }
     }
 }
