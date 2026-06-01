@@ -1,239 +1,268 @@
-# AlertToast-SwiftUI [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Get%20over%20170%20free%20design%20blocks%20based%20on%20Bootstrap%204&url=https://froala.com/design-blocks&via=froala&hashtags=bootstrap,design,templates,blocks,developers)
+# AlertToast-SwiftUI
+
 ### Present Apple-like alert & toast in SwiftUI
 
+> **Maintained fork.** This is an actively maintained fork of [elai950/AlertToast](https://github.com/elai950/AlertToast), which is no longer receiving updates. It keeps the original API while adding visionOS support, a native Liquid Glass background on iOS/macOS 26, and community bug fixes. See the [Releases](https://github.com/patro85/AlertToast/releases) page for the changelog.
+
 <p align="center">
-   <img src="https://github.com/elai950/AlertToast/blob/master/Assets/GithubCoverNew.png" width="480"/>
+   <img src="https://github.com/patro85/AlertToast/blob/master/Assets/GithubCoverNew.png" width="480"/>
 </p>
 
 ## 🌄 Example
 
 <p align="center">
-    <img src="https://github.com/elai950/AlertToast/blob/master/Assets/onboarding.png" style="display: block; margin: auto;"/>
+    <img src="https://github.com/patro85/AlertToast/blob/master/Assets/onboarding.png" style="display: block; margin: auto;"/>
 </p>
 
 <p align="center">
-    <img src="https://github.com/elai950/AlertToast/blob/master/Assets/ToastExample.gif" style="display: block; margin: auto;" width="180"/>
+    <img src="https://github.com/patro85/AlertToast/blob/master/Assets/ToastExample.gif" style="display: block; margin: auto;" width="180"/>
 </p>
 
 ## 🔭 Overview
 
-Currently in SwiftUI, the only way to inform the user about some process that finished for example, is by using `Alert`. Sometimes, you just want to display a message that tells the user that something has completed or that their message was sent. Apple doesn't provide any method other than using Alert, even though they use various types of pop-ups. This results in poor UX, as the user must tap 'OK' or 'Dismiss' for every piece of information they should be notified about
+Currently in SwiftUI, the only way to inform the user about some process that finished, for example, is by using `Alert`. Sometimes you just want to display a message telling the user that something completed or that their message was sent. Apple doesn't provide any method other than using `Alert`, even though they use various types of pop-ups themselves. This results in poor UX, as the user must tap "OK" or "Dismiss" for every piece of information they should be notified about.
 
-Alert Toast is an open-source library in Github to use with SwiftUI. It allows you to present popups that don't need any user action to dismiss or to validate. Some great usage examples: `Message Sent`, `Poor Network Connection`, `Profile Updated`, `Logged In/Out`, `Favorited`, `Loading` and so on...
+`AlertToast` is an open-source library to use with SwiftUI. It lets you present popups that don't need any user action to dismiss or to validate. Some great usage examples: `Message Sent`, `Poor Network Connection`, `Profile Updated`, `Logged In/Out`, `Favorited`, `Loading`, and so on.
 
 <img src="https://img.shields.io/badge/BUILD-1.4.0-green?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/PLATFORM-IOS%20|%20MACOS%20|%20VISIONOS-lightgray?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/LICENSE-MIT-lightgray?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/MADE WITH-SWIFTUI-orange?style=for-the-badge" />
 
 * Built with pure SwiftUI.
-* 3 Display modes: `Alert` (pop at the center), `HUD` (drop from the top) and `Banner` (pop/slide from the bottom).
-* `Complete`, `Error` `SystemImage`, `Image`, `Loading`, and `Regular` (Only Text).
+* 3 display modes: `Alert` (pop at the center), `HUD` (drop from the top), and `Banner` (pop/slide from the bottom).
+* Alert types: `Complete`, `Error`, `SystemImage`, `Image`, `Loading`, and `Regular` (text only).
+* iOS, macOS, and **visionOS** support.
+* Native **Liquid Glass** background on iOS/macOS 26+ (on by default, with an opt-out).
+* Long titles and subtitles wrap instead of being truncated.
 * Supports Light & Dark Mode.
 * Works with **any** kind of view builder.
 * Localization support.
-* Font & Background customization.
+* Font & background customization.
 
-#### If you like the project, don't forget to `put star 🌟`.
-
-<a href="mailto:elai950@gmail.com"><img src="https://img.shields.io/badge/EMAIL-ELAI-informational?style=for-the-badge&logo=minutemailer&logoColor=white"></a>&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/in/elai-zuberman-8120a073/" target="_blank"><img src="https://img.shields.io/badge/LINKEDIN-informational?style=for-the-badge&logo=linkedin&logoColor=white" ></a>&nbsp;&nbsp;&nbsp;<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5JN5PT55NAHKU" target="_blank"><img src="https://img.shields.io/badge/Donate-informational?style=for-the-badge&logo=paypal&logoColor=white" ></a>
-
-₿ Bitcoin donation address:
-```
-0xec48bfa813a773fa2394aec23f97da5cb4d5ff02
-```
-- Send only BTC to this deposit address.
-- Ensure the network is BNB Smart Chain (BEP20).
+#### If you like the project, don't forget to `put a star 🌟`.
 
 ## Navigation
 
 - [Installation](#-installation)
-    - [CocoaPods](#cocoapods)
     - [Swift Package Manager](#swift-package-manager)
+    - [CocoaPods](#cocoapods)
     - [Manually](#manually)
+- [Requirements](#-requirements)
 - [Usage](#-usage)
-    - [Usage example with regular alert](#usage-example-with-regular-alert)
-    - [Complete Modifier Example](#complete-modifier-example)
-    - [Alert Toast Parameters](#alert-toast-parameters)
- - [Article](#-article)
- - [Contributing](#-contributing)
- - [Author](#-author)
- - [License](#-license)
+    - [Usage example with a regular alert](#usage-example-with-a-regular-alert)
+    - [Complete modifier example](#complete-modifier-example)
+    - [Styling & Liquid Glass](#styling--liquid-glass)
+    - [Alert Toast parameters](#alert-toast-parameters)
+- [Article](#-article)
+- [Contributing](#-contributing)
+- [Credits](#-credits)
+- [License](#-license)
 
 ## 💻 Installation
 
-### Cocoapods
+### Swift Package Manager
 
-[AlertToast Cocapods Website](https://cocoapods.org/pods/AlertToast)
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for managing the distribution of Swift code, integrated with the Swift build system.
 
-CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `AlertToast` into your Xcode project using CocoaPods, specify it in your Podfile:
+In Xcode, go to **File → Add Package Dependencies…**, paste the repository URL, and choose a version rule (e.g. *Up to Next Major* from `1.4.0`):
 
-```ruby
-pod 'AlertToast'
+```
+https://github.com/patro85/AlertToast.git
+```
+
+Or add it directly to your `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/patro85/AlertToast.git", from: "1.4.0")
+]
 ```
 
 ------
 
-### Swift Package Manager
+### CocoaPods
 
-The [Swift Package Manager](https://swift.org/package-manager/) is a tool for managing the distribution of Swift code. It’s integrated with the Swift build system to automate the process of downloading, compiling, and linking dependencies.
+This fork is not published to the CocoaPods trunk. Reference it directly from Git in your `Podfile`:
 
-To integrate `AlertToast` into your Xcode project using Xcode 12, specify it in `File > Swift Packages > Add Package Dependency...`:
-
-```ogdl
-https://github.com/elai950/AlertToast.git, :branch="master"
+```ruby
+pod 'AlertToast', :git => 'https://github.com/patro85/AlertToast.git', :tag => '1.4.0'
 ```
-
-For Xcode 13, please refer [this article](https://iiroalhonen.medium.com/adding-a-swift-package-dependency-in-xcode-13-937b2caaf218) to install `AlertToast` 
 
 ------
 
 ### Manually
 
-If you prefer not to use any of dependency managers, you can integrate `AlertToast` into your project manually. Put `Sources/AlertToast` folder in your Xcode project. Make sure to enable `Copy items if needed` and `Create groups`.
+If you prefer not to use a dependency manager, you can integrate `AlertToast` into your project manually. Put the `Sources/AlertToast` folder in your Xcode project. Make sure to enable `Copy items if needed` and `Create groups`.
 
 ## 🧳 Requirements
 
-- iOS 13.0+ | macOS 11+
-- Xcode 12.0+ | Swift 5+
+- iOS 14.0+ · macOS 11.0+ · visionOS 1.0+
+- Swift 5.9+ (the package declares `swift-tools-version:5.9`)
+- Xcode 15.0+ to build
+
+> **Liquid Glass:** the optional Liquid Glass background uses the `glassEffect` API, which requires the iOS 26 / macOS 26 SDK (Xcode 26+) to compile. It activates automatically at runtime only on iOS/macOS 26 and later, and can be turned off — see [Styling & Liquid Glass](#styling--liquid-glass).
 
 ## 🛠 Usage
 
-First, add `import AlertToast` on every `swift` file you would like to use `AlertToast`.
+First, add `import AlertToast` to every Swift file where you want to use `AlertToast`.
 
-Then, use the `.toast` view modifier:
+Then use the `.toast` view modifier:
 
 **Parameters:**
 
-- `isPresenting`: (MUST) assign a `Binding<Bool>` to show or dismiss alert.
-- `duration`: default is 2, set 0 to disable auto dismiss.
+- `isPresenting`: (MUST) a `Binding<Bool>` to show or dismiss the alert.
+- `duration`: default is 2, set 0 to disable auto-dismiss.
 - `tapToDismiss`: default is `true`, set `false` to disable.
-- `alert`: (MUST) expects `AlertToast`.
+- `alert`: (MUST) expects an `AlertToast`.
 
-#### Usage example with regular alert
+#### Usage example with a regular alert
 
-```swift 
+```swift
 import AlertToast
 import SwiftUI
 
-struct ContentView: View{
+struct ContentView: View {
 
     @State private var showToast = false
 
-    var body: some View{
-        VStack{
-
-            Button("Show Toast"){
-                 showToast.toggle()
+    var body: some View {
+        VStack {
+            Button("Show Toast") {
+                showToast.toggle()
             }
         }
-        .toast(isPresenting: $showToast){
+        .toast(isPresenting: $showToast) {
 
             // `.alert` is the default displayMode
             AlertToast(type: .regular, title: "Message Sent!")
-            
-            //Choose .hud to toast alert from the top of the screen
-            //AlertToast(displayMode: .hud, type: .regular, title: "Message Sent!")
-            
-            //Choose .banner to slide/pop alert from the bottom of the screen
-            //AlertToast(displayMode: .banner(.slide), type: .regular, title: "Message Sent!")
+
+            // Choose .hud to drop the alert from the top of the screen
+            // AlertToast(displayMode: .hud, type: .regular, title: "Message Sent!")
+
+            // Choose .banner to slide/pop the alert from the bottom of the screen
+            // AlertToast(displayMode: .banner(.slide), type: .regular, title: "Message Sent!")
         }
     }
 }
 ```
 
-#### Complete Modifier Example
+#### Complete modifier example
 
 ```swift
 .toast(isPresenting: $showAlert, duration: 2, tapToDismiss: true, alert: {
-   //AlertToast goes here
+   // AlertToast goes here
 }, onTap: {
-   //onTap would call either if `tapToDismis` is true/false
-   //If tapToDismiss is true, onTap would call and then dismis the alert
+   // onTap is called whether `tapToDismiss` is true or false.
+   // If tapToDismiss is true, onTap is called and then the alert is dismissed.
 }, completion: {
-   //Completion block after dismiss
+   // Completion block called after dismiss
 })
 ```
 
-### Alert Toast Parameters
+#### Styling & Liquid Glass
+
+Customize appearance by passing an `AlertStyle` via `.style(...)`:
 
 ```swift
-AlertToast(displayMode: DisplayMode,
+.toast(isPresenting: $showToast) {
+    AlertToast(type: .complete(.green),
+               title: "Saved",
+               subTitle: "Your changes are stored.",
+               style: .style(backgroundColor: .gray,
+                             titleColor: .white,
+                             subTitleColor: .white,
+                             useGlassEffect: false)) // keep the classic background on iOS/macOS 26+
+}
+```
+
+On iOS 26 / macOS 26 and later, the toast background uses the native Liquid Glass material **by default**. To keep the classic solid-color / blur background, pass `useGlassEffect: false` in the style. On earlier OS versions the flag has no effect (the classic background is always used).
+
+### Alert Toast parameters
+
+```swift
+AlertToast(displayMode: DisplayMode = .alert,
            type: AlertType,
            title: Optional(String),
            subTitle: Optional(String),
            style: Optional(AlertStyle))
-           
-//This is the available customizations parameters:
-AlertStyle(backgroundColor: Color?,
-            titleColor: Color?,
-            subTitleColor: Color?,
-            titleFont: Font?,
-            subTitleFont: Font?,
-            activityIndicatorColor: Color?,
-            useGlassEffect: Bool?)
+
+// Available appearance customizations:
+.style(backgroundColor: Color?,
+       titleColor: Color?,
+       subTitleColor: Color?,
+       titleFont: Font?,
+       subTitleFont: Font?,
+       activityIndicatorColor: Color?,
+       useGlassEffect: Bool?)
 ```
 
-> **Liquid Glass:** on iOS 26 / macOS 26+ the toast background uses the native Liquid Glass material by default. To keep the classic solid-color / blur background, pass `useGlassEffect: false` in the style.
+#### Available display modes:
+- **Alert:** pop at the center of the screen.
+- **HUD:** drop from the top of the screen.
+- **Banner:** pop/slide from the bottom of the screen.
 
-#### Available Alert Types:
-- **Regular:** text only (Title and Subtitle).
+#### Available alert types:
+- **Regular:** text only (title and subtitle).
 - **Complete:** animated checkmark.
 - **Error:** animated xmark.
-- **System Image:** name image from `SFSymbols`.
-- **Image:** name image from Assets.
-- **Loading:** Activity Indicator (Spinner).
+- **System Image:** named image from `SFSymbols`.
+- **Image:** named image from Assets.
+- **Loading:** activity indicator (spinner).
 
 #### Alert dialog view modifier (with default settings):
 ```swift
-.toast(isPresenting: Binding<Bool>, duration: Double = 2, tapToDismiss: true, alert: () -> AlertToast , onTap: () -> (), completion: () -> () )
+.toast(isPresenting: Binding<Bool>, duration: Double = 2, tapToDismiss: true, alert: () -> AlertToast, onTap: () -> (), completion: () -> ())
 ```
 
-#### Simple Text Alert:
+#### Simple text alert:
 ```swift
 AlertToast(type: .regular, title: Optional(String), subTitle: Optional(String))
 ```
 
-#### Complete/Error Alert:
+#### Complete / Error alert:
 ```swift
-AlertToast(type: .complete(Color)/.error(Color), title: Optional(String), subTitle: Optional(String))
+AlertToast(type: .complete(Color) /* or */ .error(Color), title: Optional(String), subTitle: Optional(String))
 ```
 
-#### System Image Alert:
+#### System image alert:
 ```swift
 AlertToast(type: .systemImage(String, Color), title: Optional(String), subTitle: Optional(String))
 ```
 
-#### Image Alert:
+#### Image alert:
 ```swift
-AlertToast(type: .image(String), title: Optional(String), subTitle: Optional(String))
+AlertToast(type: .image(String, Color), title: Optional(String), subTitle: Optional(String))
 ```
 
-#### Loading Alert:
+#### Loading alert:
 ```swift
-//When using loading, duration won't auto dismiss and tapToDismiss is set to false
+// When using loading, duration won't auto-dismiss and tapToDismiss is set to false.
 AlertToast(type: .loading, title: Optional(String), subTitle: Optional(String))
 ```
 
-You can add many `.toast` on a single view.
+You can add many `.toast` modifiers on a single view.
 
 ## 📖 Article
 
-I wrote an article that contains more usage examples.
+The original author wrote an article with more usage examples:
 
-[Medium - How to toast an alert in SwiftUI](https://elaizuberman.medium.com/presenting-apples-music-alerts-in-swiftui-7f5c32cebed6)
+[Medium — How to toast an alert in SwiftUI](https://elaizuberman.medium.com/presenting-apples-music-alerts-in-swiftui-7f5c32cebed6)
 
-## 👨‍💻 Contributors
+## 👨‍💻 Contributing
 
-All issue reports, feature requests, pull requests and GitHub stars are welcomed and much appreciated.
+All issue reports, feature requests, pull requests, and GitHub stars are welcomed and much appreciated.
 
-- [@barnard-b](https://github.com/barnard-b)
+## 🙏 Credits
 
-## ✍️ Author
-
-Elai Zuberman
+- Original library created by **Elai Zuberman** ([@elai950](https://github.com/elai950)) — [elai950/AlertToast](https://github.com/elai950/AlertToast).
+- This fork is maintained by [@patro85](https://github.com/patro85).
+- Community contributions incorporated into this fork:
+    - visionOS support — [@derwaldgeist](https://github.com/derwaldgeist)
+    - Liquid Glass background — [@lfuelling](https://github.com/lfuelling)
+    - Subtitle wrapping fix — [@arslankaleem7229](https://github.com/arslankaleem7229)
 
 ## 📃 License
 
-`AlertToast` is available under the MIT license. See the [LICENSE](https://github.com/elai950/AlertToast/blob/master/LICENSE.md) file for more info.
+`AlertToast` is available under the MIT license. See the [LICENSE](https://github.com/patro85/AlertToast/blob/master/LICENSE.md) file for more info.
 
 ---
 
-- [Jump Up](#-overview)
+- [Jump Up](#alerttoast-swiftui)
