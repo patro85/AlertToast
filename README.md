@@ -198,6 +198,7 @@ AlertToast(displayMode: DisplayMode = .alert,
 - **Alert:** pop at the center of the screen.
 - **HUD:** drop from the top of the screen.
 - **Banner:** pop/slide from the bottom of the screen.
+- **Custom:** present any view of your own at the center of the screen (see [Custom view](#custom-view)).
 
 #### Available alert types:
 - **Regular:** text only (title and subtitle).
@@ -236,6 +237,21 @@ AlertToast(type: .image(String, Color), title: Optional(String), subTitle: Optio
 ```swift
 // When using loading, duration won't auto-dismiss and tapToDismiss is set to false.
 AlertToast(type: .loading, title: Optional(String), subTitle: Optional(String))
+```
+
+#### Custom view:
+Present any view you like using the `customView` initializer. It is shown centered like `.alert` and respects `duration` / `tapToDismiss`.
+
+```swift
+.toast(isPresenting: $showToast) {
+    AlertToast {
+        HStack {
+            ProgressView()
+            Text("Uploading…")
+                .font(.headline)
+        }
+    }
+}
 ```
 
 You can add many `.toast` modifiers on a single view.
