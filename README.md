@@ -166,8 +166,12 @@ AlertStyle(backgroundColor: Color?,
             titleColor: Color?,
             subTitleColor: Color?,
             titleFont: Font?,
-            subTitleFont: Font?)
+            subTitleFont: Font?,
+            activityIndicatorColor: Color?,
+            useGlassEffect: Bool?)
 ```
+
+> **Liquid Glass:** on iOS 26 / macOS 26+ the toast background uses the native Liquid Glass material by default. To keep the classic solid-color / blur background, pass `useGlassEffect: false` in the style.
 
 #### Available Alert Types:
 - **Regular:** text only (Title and Subtitle).
