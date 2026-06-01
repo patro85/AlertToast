@@ -106,6 +106,9 @@ public struct AlertToast: View{
         
         ///Banner from the bottom of the view
         case banner(_ transition: BannerAnimation)
+
+        ///Present a fully custom view at the center of the screen
+        case custom
     }
     
     /// Determine what the alert will display
@@ -217,7 +220,10 @@ public struct AlertToast: View{
     
     ///Customize your alert appearance
     public var style: AlertStyle? = nil
-    
+
+    ///The custom content shown when `displayMode` is `.custom`
+    public var customView: (() -> AnyView)? = nil
+
     ///Full init
     public init(displayMode: DisplayMode = .alert,
                 type: AlertType,
@@ -241,7 +247,16 @@ public struct AlertToast: View{
         self.type = type
         self.title = title
     }
-    
+
+    ///Init for a fully custom view, presented centered like `.alert`
+    public init<Content: View>(@ViewBuilder customView: @escaping () -> Content,
+                               style: AlertStyle? = nil){
+        self.displayMode = .custom
+        self.type = .regular
+        self.style = style
+        self.customView = { AnyView(customView()) }
+    }
+
     ///Banner from the bottom of the view
     public var banner: some View{
         VStack{
@@ -410,7 +425,21 @@ public struct AlertToast: View{
         .alertBackground(style?.backgroundColor ?? nil, useGlassEffect: style?.useGlassEffect ?? true)
         .cornerRadius(10)
     }
-    
+
+    ///Fully custom content provided via the `customView` initializer
+    public var custom: some View{
+        Group{
+            if let customView = customView {
+                customView()
+            } else {
+                EmptyView()
+            }
+        }
+        .padding()
+        .alertBackground(style?.backgroundColor ?? nil, useGlassEffect: style?.useGlassEffect ?? true)
+        .cornerRadius(10)
+    }
+
     ///Body init determine by `displayMode`
     public var body: some View{
         switch displayMode{
@@ -420,6 +449,8 @@ public struct AlertToast: View{
             hud
         case .banner:
             banner
+        case .custom:
+            custom
         }
     }
 }
@@ -472,7 +503,7 @@ public struct AlertToastModifier: ViewModifier{
         if isPresenting{
             
             switch alert().displayMode{
-            case .alert:
+            case .alert, .custom:
                 alert()
                     .onTapGesture {
                         onTap?()
@@ -582,7 +613,7 @@ public struct AlertToastModifier: ViewModifier{
                         onAppearAction()
                     }
                 })
-        case .alert:
+        case .alert, .custom:
             content
                 .overlay(ZStack{
                     main()

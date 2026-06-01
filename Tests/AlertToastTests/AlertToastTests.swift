@@ -1,4 +1,5 @@
 import XCTest
+import SwiftUI
 @testable import AlertToast
 
 final class AlertToastTests: XCTestCase {
@@ -10,7 +11,16 @@ final class AlertToastTests: XCTestCase {
         XCTAssertEqual(toast.subTitle, "Subtitle")
     }
 
+    func testCustomViewInit() {
+        let toast = AlertToast {
+            Text("Custom")
+        }
+        XCTAssertEqual(toast.displayMode, .custom)
+        XCTAssertNotNil(toast.customView)
+    }
+
     static var allTests = [
         ("testInit", testInit),
+        ("testCustomViewInit", testCustomViewInit),
     ]
 }
