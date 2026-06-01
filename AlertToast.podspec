@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "AlertToast"
-  spec.version      = "1.3.9"
+  spec.version      = "1.4.0"
   spec.summary      = "Create Apple-like alerts & toasts using SwiftUI"
 
   # This description is used to generate tags and improve search results.
@@ -27,7 +27,7 @@ Pod::Spec.new do |spec|
 
   spec.description  = "Alert Toast is an open-source library in Github to use with SwiftUI. It allows you to present popups that don't need any user action to dismiss or to validate. Some great usage examples: Message Sent, Poor Network Connection, Profile Updated, Logged In/Out, Favorited, Loading and so on..."
 
-  spec.homepage     = "https://github.com/elai950/AlertToast"
+  spec.homepage     = "https://github.com/patro85/AlertToast"
   # spec.screenshots  = "https://github.com/elai950/AlertToast/blob/master/Assets/ToastExample.gif"
 
 
@@ -78,7 +78,7 @@ Pod::Spec.new do |spec|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  spec.source       = { :git => "https://github.com/elai950/AlertToast.git", :tag => "#{spec.version}" }
+  spec.source       = { :git => "https://github.com/patro85/AlertToast.git", :tag => "#{spec.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
