@@ -24,7 +24,7 @@ Currently in SwiftUI, the only way to inform the user about some process that fi
 
 `AlertToast` is an open-source library to use with SwiftUI. It lets you present popups that don't need any user action to dismiss or to validate. Some great usage examples: `Message Sent`, `Poor Network Connection`, `Profile Updated`, `Logged In/Out`, `Favorited`, `Loading`, and so on.
 
-<img src="https://img.shields.io/badge/BUILD-1.5.0-green?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/PLATFORM-IOS%20|%20MACOS%20|%20VISIONOS-lightgray?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/LICENSE-MIT-lightgray?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/MADE WITH-SWIFTUI-orange?style=for-the-badge" />
+<img src="https://img.shields.io/badge/BUILD-1.5.1-green?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/PLATFORM-IOS%20|%20MACOS%20|%20VISIONOS-lightgray?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/LICENSE-MIT-lightgray?style=for-the-badge" />&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/MADE WITH-SWIFTUI-orange?style=for-the-badge" />
 
 * Built with pure SwiftUI.
 * 3 display modes: `Alert` (pop at the center), `HUD` (drop from the top), and `Banner` (pop/slide from the bottom).
@@ -62,7 +62,7 @@ Currently in SwiftUI, the only way to inform the user about some process that fi
 
 The [Swift Package Manager](https://swift.org/package-manager/) is a tool for managing the distribution of Swift code, integrated with the Swift build system.
 
-In Xcode, go to **File → Add Package Dependencies…**, paste the repository URL, and choose a version rule (e.g. *Up to Next Major* from `1.5.0`):
+In Xcode, go to **File → Add Package Dependencies…**, paste the repository URL, and choose a version rule (e.g. *Up to Next Major* from `1.5.1`):
 
 ```
 https://github.com/patro85/AlertToast.git
@@ -72,7 +72,7 @@ Or add it directly to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/patro85/AlertToast.git", from: "1.5.0")
+    .package(url: "https://github.com/patro85/AlertToast.git", from: "1.5.1")
 ]
 ```
 
@@ -83,7 +83,7 @@ dependencies: [
 This fork is not published to the CocoaPods trunk. Reference it directly from Git in your `Podfile`:
 
 ```ruby
-pod 'AlertToast', :git => 'https://github.com/patro85/AlertToast.git', :tag => '1.5.0'
+pod 'AlertToast', :git => 'https://github.com/patro85/AlertToast.git', :tag => '1.5.1'
 ```
 
 ------
@@ -255,6 +255,11 @@ Present any view you like using the `customView` initializer. It is shown center
 ```
 
 You can add many `.toast` modifiers on a single view.
+
+#### Right-to-left (RTL) layouts
+Layout, text alignment, and `SystemImage` icons mirror automatically in RTL locales, and the universal `.complete` / `.error` marks are intentionally kept unmirrored (per Apple's guidance for universally recognized symbols).
+
+The one thing the library can't decide for you is a custom `.image(_:)` asset: if your asset is directional (e.g. a reply or forward arrow) and should flip in RTL, set its **Direction → "Mirrors"** in the asset catalog, or apply `.flipsForRightToLeftLayoutDirection(true)`. Non-directional assets need nothing.
 
 ## 📖 Article
 
