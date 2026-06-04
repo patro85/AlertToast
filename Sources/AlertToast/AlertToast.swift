@@ -43,6 +43,7 @@ fileprivate struct AnimatedCheckmark: View {
             percentage = 1.0
         }
         .frame(width: width, height: height, alignment: .center)
+        .environment(\.layoutDirection, .leftToRight)
     }
 }
 
