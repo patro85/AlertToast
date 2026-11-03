@@ -93,8 +93,11 @@ fileprivate struct AnimatedXmark: View {
 @available(iOS 14, macOS 11, *)
 fileprivate struct ProgressRing: View {
     
-    ///Outer diameter used by the `.alert` card, matching the checkmark / xmark
-    static let alertSize: CGFloat = 50
+    ///Outer diameter used by the `.alert` card. The checkmark / xmark ink spans
+    ///about 56pt (a 50pt box plus round caps), and an outline has to be a little
+    ///wider than a solid stroke to read as the same size. At 64pt the ring's
+    ///stroke (6.4pt) also matches the checkmark's (6.25pt).
+    static let alertSize: CGFloat = 64
     
     ///Outer diameter used by `.hud` and `.banner`, matching the large
     ///`ActivityIndicator` that `.loading` draws in the same slot
