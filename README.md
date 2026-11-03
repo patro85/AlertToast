@@ -207,7 +207,7 @@ AlertToast(displayMode: DisplayMode = .alert,
 - **System Image:** named image from `SFSymbols`.
 - **Image:** named image from Assets.
 - **Loading:** activity indicator (spinner).
-- **Progress:** determinate progress ring, filled to a `0…1` value.
+- **Progress:** determinate progress ring, shaded like the Activity rings, filled to a `0…1` value.
 
 #### Alert dialog view modifier (with default settings):
 ```swift

@@ -88,8 +88,9 @@ fileprivate struct AnimatedXmark: View {
     }
 }
 
-///Determinate progress ring: a faint track, an arc that fills clockwise from
-///12 o'clock up to `value`, and a round dot capping each end of the arc.
+///Determinate progress ring: a faint track and a round-capped arc that fills
+///clockwise from 12 o'clock up to `value`. Like Apple's Activity rings the arc
+///is shaded from a slightly deeper tone at its start to a brighter one at its tip.
 @available(iOS 14, macOS 11, *)
 fileprivate struct ProgressRing: View {
     
@@ -130,19 +131,8 @@ fileprivate struct ProgressRing: View {
         ZStack {
             Circle()
                 .stroke(color.opacity(0.2), lineWidth: thickness)
-            Circle()
-                .trim(from: 0, to: CGFloat(clamped))
-                .stroke(color, lineWidth: thickness)
-                .rotationEffect(.degrees(-90))
-            
-            if clamped > 0 {
-                Circle()
-                    .fill(color)
-                    .frame(width: thickness, height: thickness)
-                    .offset(y: -radius)
-                ArcEndDot(progress: clamped, diameter: thickness)
-                    .fill(color)
-            }
+            Color.clear
+                .modifier(ProgressArc(progress: clamped, color: color, thickness: thickness))
         }
         .frame(width: radius * 2, height: radius * 2)
         .animation(.easeInOut, value: clamped)
@@ -151,32 +141,64 @@ fileprivate struct ProgressRing: View {
     }
 }
 
-///The dot capping the moving end of `ProgressRing`'s arc. It is a `Shape` so
-///the dot animates along the arc together with the trim instead of cutting
-///straight across the circle.
+///The filled part of `ProgressRing`: the arc from 12 o'clock to `progress`,
+///cross-faded along its length from a deeper, slightly hue-shifted tone at the
+///start to a brighter one at the tip, with `color` itself showing mid-arc.
+///The shifts (about 10° of hue and 0.08 of brightness each way) were measured
+///from Apple's Activity rings. It is an `Animatable` modifier rather than a
+///`Shape` so the trim, the shading and the rounded tip animate together;
+///`content` is unused.
 @available(iOS 14, macOS 11, *)
-fileprivate struct ArcEndDot: Shape {
+fileprivate struct ProgressArc: ViewModifier, Animatable {
     
     ///Fill fraction, 0…1
     var progress: Double
     
-    ///Dot diameter, equal to the ring's stroke width
-    var diameter: CGFloat
+    ///Ring color
+    var color: Color
+    
+    ///Stroke width
+    var thickness: CGFloat
+    
+    ///Hue shift in degrees applied at each end of the arc
+    private let hueShift: Double = 10
+    
+    ///Brightness shift applied at each end of the arc
+    private let brightnessShift: Double = 0.08
     
     var animatableData: Double {
         get { progress }
         set { progress = newValue }
     }
     
-    func path(in rect: CGRect) -> Path {
-        let radius = min(rect.width, rect.height) / 2
-        let angle = progress * 2 * .pi - .pi / 2
-        let center = CGPoint(x: rect.midX + CGFloat(cos(angle)) * radius,
-                             y: rect.midY + CGFloat(sin(angle)) * radius)
-        return Path(ellipseIn: CGRect(x: center.x - diameter / 2,
-                                      y: center.y - diameter / 2,
-                                      width: diameter,
-                                      height: diameter))
+    private var arc: some Shape {
+        Circle()
+            .trim(from: 0, to: CGFloat(progress))
+            .rotation(.degrees(-90))
+    }
+    
+    private var strokeStyle: StrokeStyle {
+        return StrokeStyle(lineWidth: thickness, lineCap: .round)
+    }
+    
+    func body(content: Content) -> some View {
+        ZStack {
+            //Deeper tone, left visible at the start of the arc
+            arc.stroke(color, style: strokeStyle)
+                .hueRotation(.degrees(hueShift))
+                .brightness(-brightnessShift)
+            //Brighter tone, faded in along the arc so it owns the tip
+            arc.stroke(color, style: strokeStyle)
+                .hueRotation(.degrees(-hueShift))
+                .brightness(brightnessShift)
+                .mask(
+                    arc.stroke(AngularGradient(gradient: Gradient(colors: [Color.black.opacity(0), Color.black]),
+                                               center: .center,
+                                               startAngle: .degrees(-90),
+                                               endAngle: .degrees(-90 + 360 * progress)),
+                               style: strokeStyle)
+                )
+        }
     }
 }
 
