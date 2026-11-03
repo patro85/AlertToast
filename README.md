@@ -251,6 +251,10 @@ AlertToast(type: .progress(0.4, .blue), title: "Uploading…")
 
 Read the value from state inside the `alert` closure (e.g. `.progress(uploadProgress, .blue)`) and the ring animates to each new value as the state changes.
 
+<p align="center">
+    <img src="https://github.com/patro85/AlertToast/blob/master/Assets/progress-ring/modes-light.png" style="display: block; margin: auto;" width="640"/>
+</p>
+
 #### Custom view:
 Present any view you like using the `customView` initializer. It is shown centered like `.alert` and respects `duration` / `tapToDismiss`.
 
