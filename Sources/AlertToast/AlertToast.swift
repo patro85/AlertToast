@@ -411,7 +411,7 @@ public struct AlertToast: View{
                             .renderingMode(.template)
                             .foregroundColor(color)
                     case .loading:
-                         ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
+                         ActivityIndicator(color: style?.activityIndicatorColor)
                     case .progress(let value, let color):
                         ProgressRing(value: value, color: color, size: ProgressRing.hudSize)
                     case .regular:
@@ -461,7 +461,7 @@ public struct AlertToast: View{
                         .hudModifier()
                         .foregroundColor(color)
                 case .loading:
-                    ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
+                    ActivityIndicator(color: style?.activityIndicatorColor)
                 case .progress(let value, let color):
                     ProgressRing(value: value, color: color, size: ProgressRing.hudSize)
                 case .regular:
@@ -532,7 +532,7 @@ public struct AlertToast: View{
                     .padding(.bottom)
                 Spacer()
             case .loading:
-                 ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
+                 ActivityIndicator(color: style?.activityIndicatorColor)
             case .progress(let value, let color):
                 Spacer()
                 ProgressRing(value: value, color: color, size: ProgressRing.alertSize)

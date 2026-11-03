@@ -240,6 +240,8 @@ AlertToast(type: .image(String, Color), title: Optional(String), subTitle: Optio
 AlertToast(type: .loading, title: Optional(String), subTitle: Optional(String))
 ```
 
+The spinner uses the system's adaptive gray, so it stays visible on both light and dark cards. Set `activityIndicatorColor` in the style to override it.
+
 #### Progress alert:
 ```swift
 // A determinate ring filled clockwise to `value` (0…1). Like `.loading`, it does not

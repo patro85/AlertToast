@@ -11,7 +11,8 @@ import SwiftUI
 @available(macOS 11, *)
 struct ActivityIndicator: NSViewRepresentable {
 
-    let color: Color
+    ///Unused on macOS: `NSProgressIndicator` always draws in the system color
+    let color: Color?
 
     func makeNSView(context: NSViewRepresentableContext<ActivityIndicator>) -> NSProgressIndicator {
         let nsView = NSProgressIndicator()
@@ -30,7 +31,9 @@ struct ActivityIndicator: NSViewRepresentable {
 @available(iOS 14, *)
 struct ActivityIndicator: UIViewRepresentable {
 
-    let color: Color
+    ///Spinner color. `nil` keeps UIKit's default, an adaptive gray that is
+    ///visible on both light and dark backgrounds.
+    let color: Color?
 
     func makeUIView(context: UIViewRepresentableContext<ActivityIndicator>) -> UIActivityIndicatorView {
         
@@ -41,7 +44,8 @@ struct ActivityIndicator: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIActivityIndicatorView, context: UIViewRepresentableContext<ActivityIndicator>) {
-        uiView.color = UIColor(color)
+        //`color` is null-resettable: assigning nil restores the system default
+        uiView.color = color.map { UIColor($0) }
     }
 }
 #endif

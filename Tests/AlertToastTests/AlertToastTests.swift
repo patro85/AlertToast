@@ -50,11 +50,21 @@ final class AlertToastTests: XCTestCase {
         XCTAssertFalse(AlertToast.AlertType.image("logo", .gray).isInProgress)
     }
 
+    func testLoadingToastBuildsWithAndWithoutIndicatorColor() {
+        let modes: [AlertToast.DisplayMode] = [.alert, .hud, .banner(.slide)]
+        for mode in modes {
+            _ = AlertToast(displayMode: mode, type: .loading, title: "Loading…").body
+            _ = AlertToast(displayMode: mode, type: .loading, title: "Loading…",
+                           style: .style(activityIndicatorColor: .white)).body
+        }
+    }
+
     static var allTests = [
         ("testInit", testInit),
         ("testCustomViewInit", testCustomViewInit),
         ("testProgressTypeIsEquatableByValue", testProgressTypeIsEquatableByValue),
         ("testProgressToastBuildsInEveryDisplayMode", testProgressToastBuildsInEveryDisplayMode),
         ("testProgressNeverDismissesItself", testProgressNeverDismissesItself),
+        ("testLoadingToastBuildsWithAndWithoutIndicatorColor", testLoadingToastBuildsWithAndWithoutIndicatorColor),
     ]
 }
