@@ -88,6 +88,120 @@ fileprivate struct AnimatedXmark: View {
     }
 }
 
+///Determinate progress ring: a faint track and a round-capped arc that fills
+///clockwise from 12 o'clock up to `value`. Like Apple's Activity rings the arc
+///is shaded from a slightly deeper tone at its start to a brighter one at its tip.
+@available(iOS 14, macOS 11, *)
+fileprivate struct ProgressRing: View {
+    
+    ///Outer diameter used by the `.alert` card. The checkmark / xmark ink spans
+    ///about 56pt (a 50pt box plus round caps), and an outline has to be a little
+    ///wider than a solid stroke to read as the same size. At 64pt the ring's
+    ///stroke (6.4pt) also matches the checkmark's (6.25pt).
+    static let alertSize: CGFloat = 64
+    
+    ///Outer diameter used by `.hud` and `.banner`, matching the large
+    ///`ActivityIndicator` that `.loading` draws in the same slot
+    static let hudSize: CGFloat = 37
+    
+    ///Fill fraction; anything outside 0…1 is clamped
+    var value: Double
+    
+    ///Ring color
+    var color: Color = .black
+    
+    ///Outer diameter of the ring in points; the stroke never spills past it
+    var size: CGFloat = ProgressRing.alertSize
+    
+    private var clamped: Double {
+        return min(max(value, 0), 1)
+    }
+    
+    ///Radius of the stroke's centerline. The stroke is `radius / 4.5` thick,
+    ///so `radius + thickness / 2` equals `size / 2` and the glyph fits its frame.
+    private var radius: CGFloat {
+        return size * 0.45
+    }
+    
+    private var thickness: CGFloat {
+        return radius / 4.5
+    }
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(color.opacity(0.2), lineWidth: thickness)
+            Color.clear
+                .modifier(ProgressArc(progress: clamped, color: color, thickness: thickness))
+        }
+        .frame(width: radius * 2, height: radius * 2)
+        .animation(.easeInOut, value: clamped)
+        .frame(width: size, height: size)
+        .environment(\.layoutDirection, .leftToRight)
+    }
+}
+
+///The filled part of `ProgressRing`: the arc from 12 o'clock to `progress`,
+///cross-faded along its length from a deeper, slightly hue-shifted tone at the
+///start to a brighter one at the tip, with `color` itself showing mid-arc.
+///The shifts (about 10° of hue and 0.08 of brightness each way) were measured
+///from Apple's Activity rings. It is an `Animatable` modifier rather than a
+///`Shape` so the trim, the shading and the rounded tip animate together;
+///`content` is unused.
+@available(iOS 14, macOS 11, *)
+fileprivate struct ProgressArc: ViewModifier, Animatable {
+    
+    ///Fill fraction, 0…1
+    var progress: Double
+    
+    ///Ring color
+    var color: Color
+    
+    ///Stroke width
+    var thickness: CGFloat
+    
+    ///Hue shift in degrees applied at each end of the arc
+    private let hueShift: Double = 10
+    
+    ///Brightness shift applied at each end of the arc
+    private let brightnessShift: Double = 0.08
+    
+    var animatableData: Double {
+        get { progress }
+        set { progress = newValue }
+    }
+    
+    private var arc: some Shape {
+        Circle()
+            .trim(from: 0, to: CGFloat(progress))
+            .rotation(.degrees(-90))
+    }
+    
+    private var strokeStyle: StrokeStyle {
+        return StrokeStyle(lineWidth: thickness, lineCap: .round)
+    }
+    
+    func body(content: Content) -> some View {
+        ZStack {
+            //Deeper tone, left visible at the start of the arc
+            arc.stroke(color, style: strokeStyle)
+                .hueRotation(.degrees(hueShift))
+                .brightness(-brightnessShift)
+            //Brighter tone, faded in along the arc so it owns the tip
+            arc.stroke(color, style: strokeStyle)
+                .hueRotation(.degrees(-hueShift))
+                .brightness(brightnessShift)
+                .mask(
+                    arc.stroke(AngularGradient(gradient: Gradient(colors: [Color.black.opacity(0), Color.black]),
+                                               center: .center,
+                                               startAngle: .degrees(-90),
+                                               endAngle: .degrees(-90 + 360 * progress)),
+                               style: strokeStyle)
+                )
+        }
+    }
+}
+
 //MARK: - Main View
 
 @available(iOS 14, macOS 11, *)
@@ -131,8 +245,23 @@ public struct AlertToast: View{
         ///Loading indicator (Circular)
         case loading
         
+        ///Determinate progress ring, `value` 0…1
+        case progress(_ value: Double, _ color: Color)
+        
         ///Only text alert
         case regular
+        
+        ///`true` for the types that show work in flight: `loading` and `progress`.
+        ///Such a toast never auto-dismisses and ignores `tapToDismiss`;
+        ///the caller dismisses it by setting `isPresenting` to `false`.
+        var isInProgress: Bool {
+            switch self {
+            case .loading, .progress:
+                return true
+            default:
+                return false
+            }
+        }
     }
     
     /// Customize Alert Appearance
@@ -211,7 +340,7 @@ public struct AlertToast: View{
     public var displayMode: DisplayMode = .alert
     
     ///What the alert would show
-    ///`complete`, `error`, `systemImage`, `image`, `loading`, `regular`
+    ///`complete`, `error`, `systemImage`, `image`, `loading`, `progress`, `regular`
     public var type: AlertType
     
     ///The title of the alert (`Optional(String)`)
@@ -282,7 +411,9 @@ public struct AlertToast: View{
                             .renderingMode(.template)
                             .foregroundColor(color)
                     case .loading:
-                         ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
+                         ActivityIndicator(color: style?.activityIndicatorColor)
+                    case .progress(let value, let color):
+                        ProgressRing(value: value, color: color, size: ProgressRing.hudSize)
                     case .regular:
                         EmptyView()
                     }
@@ -330,7 +461,9 @@ public struct AlertToast: View{
                         .hudModifier()
                         .foregroundColor(color)
                 case .loading:
-                    ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
+                    ActivityIndicator(color: style?.activityIndicatorColor)
+                case .progress(let value, let color):
+                    ProgressRing(value: value, color: color, size: ProgressRing.hudSize)
                 case .regular:
                     EmptyView()
                 }
@@ -399,7 +532,11 @@ public struct AlertToast: View{
                     .padding(.bottom)
                 Spacer()
             case .loading:
-                 ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
+                 ActivityIndicator(color: style?.activityIndicatorColor)
+            case .progress(let value, let color):
+                Spacer()
+                ProgressRing(value: value, color: color, size: ProgressRing.alertSize)
+                Spacer()
             case .regular:
                 EmptyView()
             }
@@ -423,6 +560,8 @@ public struct AlertToast: View{
             }
         }
         .padding()
+        //`.regular` and `.loading` hug their content. Every other type, `.progress`
+        //included, gets the fixed 175×175 card so it never resizes as the ring fills.
         .withFrame(type != .regular && type != .loading)
         .alertBackground(style?.backgroundColor ?? nil, useGlassEffect: style?.useGlassEffect ?? true)
         .cornerRadius(10)
@@ -638,7 +777,8 @@ public struct AlertToastModifier: ViewModifier{
             return
         }
         
-        if alert().type == .loading{
+        //`.loading` and `.progress` stay until the caller dismisses them
+        if alert().type.isInProgress{
             duration = 0
             tapToDismiss = false
         }
@@ -659,6 +799,7 @@ public struct AlertToastModifier: ViewModifier{
 }
 
 ///Fileprivate View Modifier for dynamic frame when alert type is `.regular` / `.loading`
+///(every other type, `.progress` included, keeps the fixed 175×175 card)
 @available(iOS 14, macOS 11, *)
 fileprivate struct WithFrameModifier: ViewModifier{
     
